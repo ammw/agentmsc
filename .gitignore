@@ -18,3 +18,9 @@ hs_err_pid*
 *.classpath
 *.project
 *.settings
+
+*pom.properties
+
+plaga-common/target/*
+plaga-exec/target/*
+plaga-ui/target/*

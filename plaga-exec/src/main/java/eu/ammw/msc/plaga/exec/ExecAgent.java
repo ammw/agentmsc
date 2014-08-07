@@ -12,26 +12,26 @@ import jade.util.Logger;
  */
 public class ExecAgent extends Agent {
 	private Logger logger;
-	private MessageTemplate execRequestMessage;
+	private MessageTemplate execMessage;
 	
 	@Override
 	public void setup() {
 		super.setup();
 		logger = Logger.getJADELogger(this.getLocalName());
 		
-		execRequestMessage = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		execMessage = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		
 		// wait for tasks
 		this.addBehaviour(new CyclicBehaviour() {
 			
 			@Override
 			public void action() {
-				// TODO Auto-generated method stub
-				ACLMessage message = myAgent.receive(execRequestMessage);
+				// TODO negotiations
+				ACLMessage message = myAgent.receive(execMessage);
 				if (message == null)
 					block();
 				else {
-					//
+					myAgent.addBehaviour(new ExecBehaviour(message));
 				}
 			}
 		});
