@@ -19,8 +19,9 @@ hs_err_pid*
 *.project
 *.settings
 
-*pom.properties
-
-plaga-common/target/*
-plaga-exec/target/*
-plaga-ui/target/*
+common/target/*
+exec/target/*
+ui/target/*
+common/build/*
+exec/build/*
+ui/build/*
