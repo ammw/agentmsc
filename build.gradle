@@ -1,3 +1,5 @@
+defaultTasks = ['clean', 'jar']
+
 subprojects {
 	apply plugin: 'java'
 	sourceCompatibility  = 1.7
@@ -16,12 +18,6 @@ subprojects {
 		compile 'com.tilab.jade:jade-misc:2.5.0'
 		testCompile "junit:junit:4.11"
 	}
-
-	jar {
-		from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-		manifest { attributes 'Main-Class': 'jade.Boot' }
-	}
-
 }
 
 project(':taskexec') {
