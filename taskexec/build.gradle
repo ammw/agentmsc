@@ -1,0 +1,9 @@
+task(startContainer) {
+	// dependsOn(jar) // commented out to avoid IOExceptions
+
+	doLast { println "running taskexec"
+	// TODO do it like it should be done
+	exec {
+		commandLine 'java -cp build/libs/taskexec-1.0.jar jade.Boot -agents exec0:eu.ammw.msc.plaga.exec.ExecAgent'
+	}}
+}

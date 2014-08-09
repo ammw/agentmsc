@@ -19,9 +19,18 @@ hs_err_pid*
 *.project
 *.settings
 
-common/target/*
-exec/target/*
-ui/target/*
+# Maven
+# common/target/*
+# taskexec/target/*
+# ui/target/*
+
+# Gradle
+.gradle/*
+build/*
 common/build/*
-exec/build/*
+taskexec/build/*
 ui/build/*
+
+# JADE
+APDescription.txt
+MTPs-Main-Container.txt
