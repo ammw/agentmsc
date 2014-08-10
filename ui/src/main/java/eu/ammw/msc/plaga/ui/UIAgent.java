@@ -18,7 +18,7 @@ public class UIAgent extends Agent {
 		super.setup();
 		logger = Logger.getJADELogger(this.getLocalName());
 		this.addBehaviour(new Behaviour() {
-			private int left = getArguments().length;
+			private int left = (getArguments() == null) ? 0 : getArguments().length;
 			
 			@Override
 			public boolean done() {
@@ -27,6 +27,10 @@ public class UIAgent extends Agent {
 			
 			@Override
 			public void action() {
+				if (getArguments() == null) {
+					left = 0;
+					return;
+				}
 				String path = getArguments()[--left].toString();
 				// TODO read files :)
 				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);

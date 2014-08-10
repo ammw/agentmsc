@@ -1,13 +1,13 @@
+def mySubpackage = 'exec'
+def myAgent = "${project.group}.${mySubpackage}.ExecAgent"
+defaultTasks = ['startContainer']
+
 jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
-task(startContainer) {
-	// dependsOn(jar) // commented out to avoid IOExceptions
-
-	doLast { println "running taskexec"
-	// TODO do it like it should be done
-	exec {
-		commandLine 'java -cp build/libs/taskexec-1.0.jar jade.Boot -agents exec0:eu.ammw.msc.plaga.exec.ExecAgent'
-	}}
+task(startContainer, dependsOn: 'jar', type: JavaExec) {
+	main = 'jade.Boot'
+	classpath = files("./build/libs/${project.name}-${version}.jar")
+	args = ["-agents", "${mySubpackage}0:${myAgent}"]
 }
