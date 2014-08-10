@@ -27,6 +27,7 @@ public class ExecAgent extends Agent {
 			@Override
 			public void action() {
 				// TODO negotiations
+				logger.fine("Gotcha! " + myAgent.getName());
 				ACLMessage message = myAgent.receive(execMessage);
 				if (message == null)
 					block();

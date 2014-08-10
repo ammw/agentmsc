@@ -11,17 +11,18 @@ import jade.util.Logger;
  *
  */
 public class UIAgent extends Agent {
-	private Logger logger = Logger.getJADELogger(this.getLocalName());
+	private Logger logger;
 	
 	@Override
 	public void setup() {
 		super.setup();
+		logger = Logger.getJADELogger(this.getLocalName());
 		this.addBehaviour(new Behaviour() {
 			private int left = getArguments().length;
 			
 			@Override
 			public boolean done() {
-				return left>0;
+				return left<1;
 			}
 			
 			@Override

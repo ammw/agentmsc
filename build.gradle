@@ -5,6 +5,7 @@ subprojects {
 	sourceCompatibility  = 1.7
 	group = 'eu.ammw.msc.plaga'
 	version = '1.0'
+	defaultTasks = ['clean', 'jar']
 
 	repositories {
 		mavenCentral()
