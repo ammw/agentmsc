@@ -6,6 +6,12 @@ jar {
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
+task(startMainContainer, dependsOn: 'jar', type: JavaExec) {
+	main = 'jade.Boot'
+	classpath = files("./build/libs/${project.name}-${version}.jar")
+	args = ["-agents", "${mySubpackage}0:${myAgent}(task1,task2)"]
+}
+
 task(startContainer, dependsOn: 'jar', type: JavaExec) {
 	main = 'jade.Boot'
 	classpath = files("./build/libs/${project.name}-${version}.jar")
