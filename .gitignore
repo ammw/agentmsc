@@ -19,6 +19,10 @@ hs_err_pid*
 *.project
 *.settings
 
+# IntelliJ IDEA
+.idea
+*.iml
+
 # Maven
 # common/target/*
 # taskexec/target/*
