@@ -1,12 +1,9 @@
 package eu.ammw.msc.plaga.exec;
 
 import eu.ammw.msc.plaga.common.ServiceType;
+import eu.ammw.msc.plaga.common.Utils;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.util.Logger;
@@ -42,19 +39,8 @@ public class ExecAgent extends Agent {
 		});
 
 		// Register EXEC service
-		DFAgentDescription description = new DFAgentDescription();
-		description.setName(getAID());
-		ServiceDescription service = new ServiceDescription();
-		service.setType(ServiceType.EXEC.toString());
-		service.setName(getClass().getName() + "_" + getLocalName());
-		description.addServices(service);
-		try {
-			DFService.register(this, description);
-		} catch (FIPAException e) {
-			logger.severe("Could not register EXEC agent " + getName());
-			logger.severe(e.toString());
+		if (!Utils.registerService(this, ServiceType.EXEC))
 			doDelete();
-		}
 
 		logger.info(getLocalName() + " started.");
 	}
@@ -62,12 +48,7 @@ public class ExecAgent extends Agent {
 	@Override
 	public void takeDown() {
 		super.takeDown();
-		try {
-			DFService.deregister(this);
-		} catch (FIPAException e) {
-			logger.warning("Could not unregister " + getName());
-			logger.warning(e.toString());
-		}
+		Utils.unregisterService(this);
 		logger.warning(getLocalName() + " terminated!");
 	}
 }

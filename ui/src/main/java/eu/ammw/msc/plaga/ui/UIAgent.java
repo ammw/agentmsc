@@ -1,12 +1,10 @@
 package eu.ammw.msc.plaga.ui;
 
 import eu.ammw.msc.plaga.common.ServiceType;
+import eu.ammw.msc.plaga.common.Utils;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
 
@@ -40,14 +38,9 @@ public class UIAgent extends Agent {
 				msg.setContent(path);
 
 				// Find EXEC in directory
-				ServiceDescription service = new ServiceDescription();
-				service.setType(ServiceType.EXEC.toString());
-				DFAgentDescription template = new DFAgentDescription();
-				template.addServices(service);
-				AID chosenOne = null;
-				try {
-					chosenOne = DFService.search(myAgent, template)[0].getName();
-				} catch (Exception e) {
+				AID[] execs = Utils.getAgentsForServiceType(myAgent, ServiceType.EXEC);
+				if (execs == null || execs.length == 0) {
+					left++;
 					logger.info("Found no one to do the task. Will retry in 15s.");
 					try {
 						Thread.sleep(15000);
@@ -55,12 +48,8 @@ public class UIAgent extends Agent {
 						logger.severe(e1.toString());
 						doDelete();
 					}
-				}
-
-				if (chosenOne == null)
-					left++;
-				else {
-					msg.addReceiver(chosenOne);
+				} else {
+					msg.addReceiver(execs[0]);
 					msg.addReplyTo(getAID());
 					send(msg);
 				}
