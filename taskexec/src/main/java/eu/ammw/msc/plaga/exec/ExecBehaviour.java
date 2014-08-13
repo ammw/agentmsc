@@ -3,6 +3,8 @@ package eu.ammw.msc.plaga.exec;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
+import org.apache.commons.codec.binary.Base64;
+
 
 public class ExecBehaviour extends Behaviour {
 	private short progress = 0;
@@ -22,14 +24,16 @@ public class ExecBehaviour extends Behaviour {
 	}
 
 	private void extractDataFromMessage(ACLMessage message) {
-		this.messageContent = message.getContent();
+		System.err.println(message.getContent());
+		this.messageContent = new String(Base64.decodeBase64(message.getContent().getBytes()));
+		System.err.println(messageContent);
 		this.message = message;
 	}
 
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
-		if (++progress == 10) done = true;
+		if (++progress == 5) done = true;
 		System.out.println(messageContent + " progress: " + progress);
 	}
 

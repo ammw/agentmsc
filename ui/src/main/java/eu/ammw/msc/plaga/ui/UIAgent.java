@@ -7,6 +7,7 @@ import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * @author AMW
@@ -33,9 +34,10 @@ public class UIAgent extends Agent {
 					return;
 				}
 				String path = getArguments()[--left].toString();
+				byte [] encoded = Base64.encodeBase64(path.getBytes());
 				// TODO read files :)
 				ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-				msg.setContent(path);
+				msg.setContent(new String(encoded));
 
 				// Find EXEC in directory
 				AID[] execs = Utils.getAgentsForServiceType(myAgent, ServiceType.EXEC);
