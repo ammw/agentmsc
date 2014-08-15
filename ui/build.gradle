@@ -15,5 +15,5 @@ task(startMainContainer, dependsOn: 'jar', type: JavaExec) {
 task(startContainer, dependsOn: 'jar', type: JavaExec) {
 	main = 'jade.Boot'
 	classpath = files("./build/libs/${project.name}-${version}.jar")
-	args = ["-container", "-host", "127.0.0.1", "-agents", "${mySubpackage}0:${myAgent}(\"./src/test/resources/testfile.txt\")"]
+	args = ["-container", "-host", "127.0.0.1", "-agents", "${mySubpackage}0:${myAgent}(\"./src/test/resources/my-app-1.0.jar\")"]
 }

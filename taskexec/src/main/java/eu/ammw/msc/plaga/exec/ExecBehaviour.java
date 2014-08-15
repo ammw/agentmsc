@@ -58,7 +58,7 @@ public class ExecBehaviour extends Behaviour {
 	public void action() {
 		// TODO Auto-generated method stub
 		if (++progress == 5) done = true;
-		System.out.println(messageContent + " progress: " + progress);
+		System.out.println(id + " progress: " + progress);
 	}
 
 	@Override
