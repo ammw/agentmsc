@@ -45,7 +45,7 @@ public abstract class Utils {
 	}
 
 	/**
-	 * Unegisters in DF a service for agent.
+	 * Unregisters in DF a service for agent.
 	 *
 	 * @param agent agent offering service (usually invoked with <code>this</code>)
 	 * @return true for success, false otherwise
