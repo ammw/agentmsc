@@ -8,6 +8,11 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.util.Logger;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * Utility class containing some potentially useful methods.
  *
@@ -31,7 +36,7 @@ public abstract class Utils {
 		try {
 			DFService.register(agent, description);
 		} catch (FIPAException e) {
-			Logger logger = Logger.getJADELogger(agent.getLocalName());
+			Logger logger = Logger.getJADELogger(agent.getClass().getName());
 			logger.severe("Could not register " + serviceType.getDescription() + " agent " + agent.getName());
 			logger.severe(e.toString());
 			return false;
@@ -49,7 +54,7 @@ public abstract class Utils {
 		try {
 			DFService.deregister(agent);
 		} catch (FIPAException e) {
-			Logger logger = Logger.getJADELogger(agent.getLocalName());
+			Logger logger = Logger.getJADELogger(agent.getClass().getName());
 			logger.warning("Could not unregister " + agent.getName());
 			logger.warning(e.toString());
 		}
@@ -59,7 +64,7 @@ public abstract class Utils {
 	/**
 	 * Finds in DF all agents registered for given service.
 	 *
-	 * @param caller agent calling this method (usually <code>this</code> or <code>myAgent</code>)
+	 * @param caller      agent calling this method (usually <code>this</code> or <code>myAgent</code>)
 	 * @param serviceType requested service type
 	 * @return array of agent AIDs; empty when no agents present, <code>null</code> on error
 	 */
@@ -77,9 +82,44 @@ public abstract class Utils {
 			for (int i = 0; i < result.length; i++)
 				foundAgents[i] = result[i].getName();
 		} catch (FIPAException e) {
-			Logger logger = Logger.getJADELogger(caller.getLocalName());
+			Logger logger = Logger.getJADELogger(caller.getClass().getName());
 			logger.warning(serviceType.getDescription() + " service search unsuccessful");
 		}
 		return foundAgents;
+	}
+
+	/**
+	 * Reads content of a file into byte array.
+	 *
+	 * @param path path of a file to read from
+	 * @return content of the whole file, as byte array
+	 * @throws IOException
+	 */
+	public static byte[] readFile(String path) throws IOException {
+		Path p = Paths.get(path);
+		return Files.readAllBytes(p);
+	}
+
+	/**
+	 * Creates (or overwrites) a file, writing given binary content to it.
+	 *
+	 * @param path        path to file
+	 * @param fileContent desired content of the new file
+	 * @throws IOException
+	 */
+	public static void writeFile(String path, byte[] fileContent) throws IOException {
+		Path p = Paths.get(path);
+		Files.write(p, fileContent);
+	}
+
+	/**
+	 * Creates a directory recursively.
+	 *
+	 * @param path directory to create
+	 * @throws IOException
+	 */
+	public static void createDirectory(String path) throws IOException {
+		Path p = Paths.get(path);
+		Files.createDirectories(p);
 	}
 }

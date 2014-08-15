@@ -38,3 +38,6 @@ ui/build/*
 # JADE
 APDescription.txt
 MTPs-Main-Container.txt
+
+# Platform temporary files
+taskexec/files/*

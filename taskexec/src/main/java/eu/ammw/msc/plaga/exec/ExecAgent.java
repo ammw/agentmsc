@@ -18,7 +18,7 @@ public class ExecAgent extends Agent {
 	@Override
 	public void setup() {
 		super.setup();
-		logger = Logger.getJADELogger(this.getLocalName());
+		logger = Logger.getJADELogger(getClass().getName());
 
 		execMessage = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 
