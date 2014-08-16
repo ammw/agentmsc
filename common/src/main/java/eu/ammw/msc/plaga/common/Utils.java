@@ -8,10 +8,12 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.util.Logger;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 /**
  * Utility class containing some potentially useful methods.
@@ -19,6 +21,9 @@ import java.nio.file.Paths;
  * @author AMW
  */
 public abstract class Utils {
+	public static final String PROPERTY_FILE_LOCATION = "plaga.properties";
+	private static Properties properties = null;
+
 	/**
 	 * Registers in DF a service for agent by type.
 	 *
@@ -121,5 +126,33 @@ public abstract class Utils {
 	public static void createDirectory(String path) throws IOException {
 		Path p = Paths.get(path);
 		Files.createDirectories(p);
+	}
+
+	/**
+	 * Reads given property from default properties file.
+	 *
+	 * @param key property name
+	 * @return property value
+	 */
+	public static String getProperty(String key) {
+		if (properties == null) {
+			properties = new Properties();
+			FileInputStream in = null;
+			try {
+				in = new FileInputStream(PROPERTY_FILE_LOCATION);
+				properties.load(in);
+			} catch (IOException ioe) {
+				properties = null;
+				return null;
+			} finally {
+				try {
+					if (in != null)
+						in.close();
+				} catch (IOException e) {
+					// What to do now?
+				}
+			}
+		}
+		return properties.getProperty(key);
 	}
 }

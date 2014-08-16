@@ -15,7 +15,7 @@ public class ExecBehaviour extends Behaviour {
 	private short progress = 0;
 	private boolean done = false;
 
-	private static final String DOWNLOAD_DIR_PREFIX = "files";
+	private static final String DOWNLOAD_DIR_PREFIX = Utils.getProperty("exec.downloadDir");
 
 	private ACLMessage message;
 	private byte[] messageContent;
