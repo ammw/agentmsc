@@ -1,13 +1,13 @@
 package eu.ammw.msc.plaga.ui;
 
 import eu.ammw.msc.plaga.common.ServiceType;
+import eu.ammw.msc.plaga.common.Task;
 import eu.ammw.msc.plaga.common.Utils;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
-import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 
@@ -38,10 +38,12 @@ public class UIAgent extends Agent {
 				String path = getArguments()[--left].toString();
 				// read file and send to exec
 				try {
-					byte[] encoded = Base64.encodeBase64(Utils.readFile(path));
+					long timestamp = System.currentTimeMillis();
+					Task task = new Task(myAgent.getLocalName() + timestamp, Utils.readFile(path));
+					task.setJarFileName("main" + timestamp + ".jar");
 
 					ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-					msg.setContent(new String(encoded));
+					msg.setContent(task.toString());
 
 					// Find EXEC in directory
 					AID[] execs = Utils.getAgentsForServiceType(myAgent, ServiceType.EXEC);

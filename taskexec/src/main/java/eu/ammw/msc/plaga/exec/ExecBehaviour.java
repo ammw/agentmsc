@@ -1,13 +1,12 @@
 package eu.ammw.msc.plaga.exec;
 
+import eu.ammw.msc.plaga.common.Task;
 import eu.ammw.msc.plaga.common.Utils;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
-import org.apache.commons.codec.binary.Base64;
 
-import java.io.File;
 import java.io.IOException;
 
 
@@ -15,12 +14,7 @@ public class ExecBehaviour extends Behaviour {
 	private short progress = 0;
 	private boolean done = false;
 
-	private static final String DOWNLOAD_DIR_PREFIX = Utils.getProperty("exec.downloadDir");
-
-	private ACLMessage message;
-	private byte[] messageContent;
-	private String id;
-	private String fileName;
+	private Task task;
 
 	private Logger logger;
 
@@ -37,28 +31,22 @@ public class ExecBehaviour extends Behaviour {
 	private void extractDataFromMessage(ACLMessage message) {
 		logger = Logger.getJADELogger(myAgent == null ?
 				ExecAgent.class.getName() : myAgent.getClass().getName());
-		this.messageContent = Base64.decodeBase64(message.getContent().getBytes());
-		String path = null;
-		id = String.valueOf(System.currentTimeMillis());
-		fileName = "run.jar";
+		task = new Task(message.getContent());
 		try {
-			path = DOWNLOAD_DIR_PREFIX + File.separator + id;
-			Utils.createDirectory(path);
-			path += File.separator + fileName;
-			logger.info(path);
-			Utils.writeFile(path, messageContent);
+			Utils.createDirectory(task.getDirectory());
+			logger.info(task.getPath());
+			Utils.writeFile(task.getPath(), task.getFileContent());
 		} catch (IOException ioe) {
-			logger.severe("Cannot write file: " + path);
+			logger.severe("Cannot write file: " + task.getPath());
 			logger.severe(ioe.toString());
 		}
-		this.message = message;
 	}
 
 	@Override
 	public void action() {
 		// TODO Auto-generated method stub
 		if (++progress == 5) done = true;
-		System.out.println(id + " progress: " + progress);
+		System.out.println(task.getId() + " progress: " + progress);
 	}
 
 	@Override
