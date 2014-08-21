@@ -31,6 +31,9 @@ public class Task implements Serializable {
 			if (jarFileName.isEmpty()) jarFileName = "main.jar";
 			if (pos2 + 1 < s.length())
 				this.fileContent = Base64.decodeBase64(s.substring(pos2 + 1).getBytes());
+			if (this.fileContent != null && this.fileContent.length < 6)
+				// ...then it's no valid JAR
+				this.fileContent = null;
 			assert (s.equals(this.toString()));
 			initPath();
 		} else {
@@ -90,7 +93,8 @@ public class Task implements Serializable {
 		builder.append("\nFILE ");
 		builder.append(this.jarFileName == null ? "" : this.jarFileName);
 		builder.append("\n");
-		builder.append(new String(Base64.encodeBase64(this.fileContent)));
+		if (fileContent != null)
+			builder.append(new String(Base64.encodeBase64(this.fileContent)));
 		return builder.toString();
 	}
 }
