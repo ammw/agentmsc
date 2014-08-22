@@ -6,6 +6,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
 import jade.util.Logger;
 
 import java.io.FileInputStream;
@@ -154,5 +155,35 @@ public abstract class Utils {
 			}
 		}
 		return properties.getProperty(key);
+	}
+
+	/**
+	 * Send a reply to say the previous message wasn't recognized properly.
+	 *
+	 * @param agent   The agent that received the message and wants to reply to it.
+	 * @param message The message that caused trouble.
+	 */
+	public static void informNotUnderstood(Agent agent, ACLMessage message) {
+		ACLMessage englishPlease = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+		englishPlease.setConversationId(message.getConversationId());
+		englishPlease.addReceiver(message.getSender());
+		agent.send(englishPlease);
+	}
+
+	/**
+	 * Print exception's stack trace to logger instead ot System.err
+	 *
+	 * @param throwable The exception we want to have logged.
+	 * @param logger    The logger to print out information.
+	 */
+	public static void logStackTrace(Throwable throwable, Logger logger) {
+		logger.severe(throwable.toString());
+		StringBuilder builder = new StringBuilder(throwable.getStackTrace().length * 200);
+		builder.append("at:\n\t");
+		for (StackTraceElement element : throwable.getStackTrace()) {
+			builder.append(element.toString());
+			builder.append("\n\t");
+		}
+		logger.severe(builder.toString());
 	}
 }

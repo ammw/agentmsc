@@ -2,6 +2,7 @@ package eu.ammw.msc.plaga.exec;
 
 import eu.ammw.msc.plaga.common.Task;
 import eu.ammw.msc.plaga.common.Utils;
+import eu.ammw.msc.plaga.exec.threading.TaskThread;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -16,6 +17,7 @@ public class ExecBehaviour extends Behaviour {
 	private boolean done = false;
 
 	private Task task;
+	private TaskThread thread;
 
 	private Logger logger;
 
@@ -36,22 +38,25 @@ public class ExecBehaviour extends Behaviour {
 			task = (Task) (message.getContentObject());
 			Utils.createDirectory(task.getDirectory());
 			Utils.writeFile(task.getPath(), task.getFileContent());
-			// TODO execute
+			// execute
+			thread = new TaskThread(task);
+			thread.run();
 		} catch (UnreadableException ue) {
 			logger.severe("Unreadable task!");
 			logger.severe(ue.toString());
-			// TODO inform sender
+			// inform sender
+			Utils.informNotUnderstood(myAgent, message);
+			progress = Short.MAX_VALUE;
 		} catch (IOException ioe) {
-			logger.severe("Cannot write file: " + task.getPath());
-			logger.severe(ioe.toString());
+			Utils.logStackTrace(ioe, logger);
+			progress = Short.MAX_VALUE;
 		}
 	}
 
 	@Override
 	public void action() {
-		// TODO Auto-generated method stub
-		if (++progress == 5) done = true;
-		System.out.println(task.getId() + " progress: " + progress);
+		if (progress++ > 5) done = true;
+		logger.info(task.getId() + " progress: " + progress);
 	}
 
 	@Override

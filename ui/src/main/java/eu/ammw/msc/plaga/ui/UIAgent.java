@@ -27,6 +27,7 @@ public class UIAgent extends Agent {
 
 			@Override
 			public boolean done() {
+				if (left < 1) doDelete();
 				return left < 1;
 			}
 
@@ -40,7 +41,7 @@ public class UIAgent extends Agent {
 				// read file and send to exec
 				try {
 					long timestamp = System.currentTimeMillis();
-					Task task = new Task(myAgent.getLocalName() + timestamp, Utils.readFile(path));
+					Task task = new Task(myAgent.getLocalName() + timestamp, Utils.readFile(path), "com.mycompany.app.App", null);
 					task.setJarFileName("main" + timestamp + ".jar");
 
 					ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);

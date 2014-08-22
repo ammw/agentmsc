@@ -17,15 +17,20 @@ public class Task implements Serializable {
 	private transient String directory;
 	private String jarFileName = DEFAULT_JAR_FILE_NAME;
 	private byte[] fileContent;
+	private String[] args;
+	private String mainClass;
 
-	public Task(String id, byte[] file) {
+	public Task(String id, byte[] file, String mainClassName, String[] args) {
 		this.id = id;
 		initPath();
 		this.fileContent = file;
+		this.args = args;
+		this.mainClass = mainClassName;
 	}
 
 	@Deprecated
 	public Task(String s) {
+		// no args and classname!
 		if (s.matches("TASK .+\\nFILE .*\\n.*")) {
 			int pos1 = s.indexOf('\n');
 			int pos2 = s.indexOf('\n', pos1 + 1);
@@ -46,6 +51,8 @@ public class Task implements Serializable {
 
 	public void initPath() {
 		this.directory = Utils.getProperty("exec.downloadDir") + File.separator + id + File.separator;
+		File f = new File(directory);
+		this.directory = f.getAbsolutePath() + File.separator;
 	}
 
 	public void setFileContent(byte[] fileContent) {
@@ -62,6 +69,22 @@ public class Task implements Serializable {
 
 	public void setFileContent(String fileContent) {
 		this.fileContent = Base64.decodeBase64(fileContent.getBytes());
+	}
+
+	public String getMainClassName() {
+		return mainClass;
+	}
+
+	public void setMainClassName(String mainClassName) {
+		mainClass = mainClassName;
+	}
+
+	public String[] getArguments() {
+		return args;
+	}
+
+	public void setArguments(String[] args) {
+		this.args = args;
 	}
 
 	public String getJarFileName() {

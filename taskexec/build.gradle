@@ -9,7 +9,7 @@ jar {
 task(startMainContainer, dependsOn: 'jar', type: JavaExec) {
 	main = 'jade.Boot'
 	classpath = files("./build/libs/${project.name}-${version}.jar")
-	args = ["-agents", "${mySubpackage}0:${myAgent}"]
+	args = ["-agents", "${mySubpackage}1:${myAgent}"]
 }
 
 task(startContainer, dependsOn: 'jar', type: JavaExec) {
