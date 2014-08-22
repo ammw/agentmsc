@@ -11,9 +11,11 @@ import java.io.File;
  * @author AMW
  */
 public class Task implements Serializable {
+	protected static final String DEFAULT_JAR_FILE_NAME = "main.jar";
+
 	private String id;
 	private transient String directory;
-	private String jarFileName = "main.jar";
+	private String jarFileName = DEFAULT_JAR_FILE_NAME;
 	private byte[] fileContent;
 
 	public Task(String id, byte[] file) {
@@ -22,13 +24,14 @@ public class Task implements Serializable {
 		this.fileContent = file;
 	}
 
+	@Deprecated
 	public Task(String s) {
 		if (s.matches("TASK .+\\nFILE .*\\n.*")) {
 			int pos1 = s.indexOf('\n');
 			int pos2 = s.indexOf('\n', pos1 + 1);
 			this.id = s.substring(5, pos1);
 			this.jarFileName = s.substring(pos1 + 6, pos2);
-			if (jarFileName.isEmpty()) jarFileName = "main.jar";
+			if (jarFileName.isEmpty()) jarFileName = DEFAULT_JAR_FILE_NAME;
 			if (pos2 + 1 < s.length())
 				this.fileContent = Base64.decodeBase64(s.substring(pos2 + 1).getBytes());
 			if (this.fileContent != null && this.fileContent.length < 6)
@@ -62,6 +65,8 @@ public class Task implements Serializable {
 	}
 
 	public String getJarFileName() {
+		if (jarFileName == null)
+			jarFileName = DEFAULT_JAR_FILE_NAME;
 		return jarFileName;
 	}
 
@@ -74,6 +79,8 @@ public class Task implements Serializable {
 	}
 
 	public String getDirectory() {
+		if (directory == null)
+			initPath();
 		return directory;
 	}
 
@@ -82,7 +89,7 @@ public class Task implements Serializable {
 	}
 
 	public String getPath() {
-		return directory + jarFileName;
+		return getDirectory() + getJarFileName();
 	}
 
 	@Override

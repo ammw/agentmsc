@@ -1,5 +1,6 @@
 package eu.ammw.msc.plaga.exec;
 
+import eu.ammw.msc.plaga.common.MessageType;
 import eu.ammw.msc.plaga.common.ServiceType;
 import eu.ammw.msc.plaga.common.Utils;
 import jade.core.Agent;
@@ -20,7 +21,9 @@ public class ExecAgent extends Agent {
 		super.setup();
 		logger = Logger.getJADELogger(getClass().getName());
 
-		execMessage = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		ACLMessage tempMessage = new ACLMessage(ACLMessage.REQUEST);
+		tempMessage.addUserDefinedParameter(MessageType.MESSAGE_TYPE.toString(), MessageType.TASK_CREATE.toString());
+		execMessage = MessageTemplate.MatchCustom(tempMessage, true);
 
 		// wait for tasks
 		this.addBehaviour(new CyclicBehaviour() {

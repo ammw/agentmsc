@@ -1,5 +1,6 @@
 package eu.ammw.msc.plaga.ui;
 
+import eu.ammw.msc.plaga.common.MessageType;
 import eu.ammw.msc.plaga.common.ServiceType;
 import eu.ammw.msc.plaga.common.Task;
 import eu.ammw.msc.plaga.common.Utils;
@@ -43,7 +44,9 @@ public class UIAgent extends Agent {
 					task.setJarFileName("main" + timestamp + ".jar");
 
 					ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
-					msg.setContent(task.toString());
+					msg.setContentObject(task);
+					msg.setConversationId(myAgent.getLocalName() + timestamp);
+					msg.addUserDefinedParameter(MessageType.MESSAGE_TYPE.toString(), MessageType.TASK_CREATE.toString());
 
 					// Find EXEC in directory
 					AID[] execs = Utils.getAgentsForServiceType(myAgent, ServiceType.EXEC);
