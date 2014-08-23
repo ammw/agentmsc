@@ -10,10 +10,10 @@ import jade.lang.acl.UnreadableException;
 import jade.util.Logger;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 
 public class ExecBehaviour extends Behaviour {
-	private short progress = 0;
 	private boolean done = false;
 
 	private Task task;
@@ -38,33 +38,40 @@ public class ExecBehaviour extends Behaviour {
 			task = (Task) (message.getContentObject());
 			Utils.createDirectory(task.getDirectory());
 			Utils.writeFile(task.getPath(), task.getFileContent());
-			// execute
-			thread = new TaskThread(task);
-			thread.run();
 		} catch (UnreadableException ue) {
 			logger.severe("Unreadable task!");
 			logger.severe(ue.toString());
 			// inform sender
 			Utils.informNotUnderstood(myAgent, message);
-			progress = Short.MAX_VALUE;
+			done = true;
 		} catch (IOException ioe) {
 			Utils.logStackTrace(ioe, logger);
-			progress = Short.MAX_VALUE;
+			done = true;
 		}
 	}
 
 	@Override
 	public void action() {
-		if (progress++ > 5) done = true;
-		logger.info(task.getId() + " progress: " + progress);
+		if (thread == null) {
+			try {
+				// execute
+				logger.info("Starting task " + task.getId());
+				thread = new TaskThread(task);
+				thread.run();
+			} catch (MalformedURLException mue) {
+				Utils.logStackTrace(mue, logger);
+				done = true;
+			}
+		} else if (thread.isAlive()) {
+			logger.info("Task " + task.getId() + " in progress, please wait...");
+		} else {
+			logger.info("Task " + task.getId() + " has finished.");
+			done = true;
+		}
 	}
 
 	@Override
 	public boolean done() {
 		return done;
-	}
-
-	public short getProgress() {
-		return progress;
 	}
 }
