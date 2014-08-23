@@ -41,7 +41,7 @@ public class UIAgent extends Agent {
 				// read file and send to exec
 				try {
 					long timestamp = System.currentTimeMillis();
-					Task task = new Task(myAgent.getLocalName() + timestamp, Utils.readFile(path), "com.mycompany.app.App", null);
+					Task task = new Task(myAgent.getLocalName() + timestamp, Utils.readFile(path), "eu.ammw.msc.test.SecurityTest", null);
 					task.setJarFileName("main" + timestamp + ".jar");
 
 					ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
