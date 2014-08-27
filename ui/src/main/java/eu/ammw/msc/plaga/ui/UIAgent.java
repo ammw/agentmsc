@@ -2,8 +2,8 @@ package eu.ammw.msc.plaga.ui;
 
 import eu.ammw.msc.plaga.common.MessageType;
 import eu.ammw.msc.plaga.common.ServiceType;
-import eu.ammw.msc.plaga.common.Task;
 import eu.ammw.msc.plaga.common.Utils;
+import eu.ammw.msc.plaga.common.task.TaskExecutable;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -41,7 +41,7 @@ public class UIAgent extends Agent {
 				// read file and send to exec
 				try {
 					long timestamp = System.currentTimeMillis();
-					Task task = new Task(myAgent.getLocalName() + timestamp, Utils.readFile(path), "eu.ammw.msc.test.SecurityTest", null);
+					TaskExecutable task = new TaskExecutable(myAgent.getLocalName() + timestamp, Utils.readFile(path), "eu.ammw.msc.test.SecurityTest");
 					task.setJarFileName("main" + timestamp + ".jar");
 
 					ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);

@@ -24,6 +24,12 @@ import java.util.Properties;
 public abstract class Utils {
 	public static final String PROPERTY_FILE_LOCATION = "plaga.properties";
 	private static Properties properties = null;
+	private static Properties defaultProperties;
+
+	static {
+		defaultProperties = new Properties();
+		defaultProperties.setProperty("exec.downloadDir", "files");
+	}
 
 	/**
 	 * Registers in DF a service for agent by type.
@@ -136,6 +142,7 @@ public abstract class Utils {
 	 * @return property value
 	 */
 	public static String getProperty(String key) {
+		String defaultValue = defaultProperties.getProperty(key);
 		if (properties == null) {
 			properties = new Properties();
 			FileInputStream in = null;
@@ -144,7 +151,9 @@ public abstract class Utils {
 				properties.load(in);
 			} catch (IOException ioe) {
 				properties = null;
-				return null;
+				// TODO use logger
+				ioe.printStackTrace();
+				return defaultValue;
 			} finally {
 				try {
 					if (in != null)
@@ -154,7 +163,7 @@ public abstract class Utils {
 				}
 			}
 		}
-		return properties.getProperty(key);
+		return properties.getProperty(key, defaultValue);
 	}
 
 	/**

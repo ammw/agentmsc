@@ -1,7 +1,8 @@
 package eu.ammw.msc.plaga.exec;
 
-import eu.ammw.msc.plaga.common.Task;
 import eu.ammw.msc.plaga.common.Utils;
+import eu.ammw.msc.plaga.common.task.Task;
+import eu.ammw.msc.plaga.common.task.TaskExecutable;
 import eu.ammw.msc.plaga.exec.threading.TaskThread;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
@@ -35,9 +36,10 @@ public class ExecBehaviour extends Behaviour {
 		logger = Logger.getJADELogger(myAgent == null ?
 				ExecAgent.class.getName() : myAgent.getClass().getName());
 		try {
-			task = (Task) (message.getContentObject());
-			Utils.createDirectory(task.getDirectory());
-			Utils.writeFile(task.getPath(), task.getFileContent());
+			task = new Task((TaskExecutable) (message.getContentObject()));
+			task.willExecute();
+			Utils.createDirectory(task.getConfig().getDirectory());
+			Utils.writeFile(task.getConfig().getPath(), task.getJar().getFileContent());
 		} catch (UnreadableException ue) {
 			logger.severe("Unreadable task!");
 			logger.severe(ue.toString());
@@ -56,6 +58,7 @@ public class ExecBehaviour extends Behaviour {
 			try {
 				// execute
 				logger.info("Starting task " + task.getId());
+				logger.info("Directory for task " + task.getId() + " is " + task.getConfig().getDirectory());
 				thread = new TaskThread(task);
 				thread.run();
 			} catch (MalformedURLException mue) {
